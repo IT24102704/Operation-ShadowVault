@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Asteria Dynamics | Personnel Directory</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --bg:#0b0c09;
+      --panel:#11130f;
+      --panel2:#151811;
+      --lime:#caff18;
+      --lime-soft:#ddff73;
+      --text:#f4f5ef;
+      --muted:#8d9284;
+      --line:rgba(202,255,24,.12);
+      --line-soft:rgba(255,255,255,.07);
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 80% 15%, rgba(202,255,24,.05), transparent 24%),
+        #0b0c09;
+      color:var(--text);
+      font-family:Arial, Helvetica, sans-serif;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.18;
+
+      background-image:
+        linear-gradient(rgba(202,255,24,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(202,255,24,.03) 1px, transparent 1px);
+
+      background-size:48px 48px;
+      z-index:-2;
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      left:0;
+      right:0;
+      top:-20%;
+      height:180px;
+
+      background:linear-gradient(
+        to bottom,
+        transparent,
+        rgba(202,255,24,.025),
+        transparent
+      );
+
+      pointer-events:none;
+      animation:scan 8s linear infinite;
+      z-index:-1;
+    }
+
+    @keyframes scan{
+      from{
+        transform:translateY(-250px);
+      }
+
+      to{
+        transform:translateY(120vh);
+      }
+    }
+
+    header{
+      height:78px;
+
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+
+      padding:0 6%;
+
+      border-bottom:1px solid var(--line-soft);
+
+      background:rgba(9,10,8,.92);
+      backdrop-filter:blur(14px);
+
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+
+      color:white;
+      text-decoration:none;
+    }
+
+    .brand-mark{
+      width:38px;
+      height:38px;
+
+      display:grid;
+      place-items:center;
+
+      border:1px solid var(--lime);
+      color:var(--lime);
+
+      font-size:15px;
+      font-weight:900;
+
+      position:relative;
+      overflow:hidden;
+    }
+
+    .brand-mark::after{
+      content:"";
+      position:absolute;
+      inset:-50%;
+
+      background:linear-gradient(
+        120deg,
+        transparent 40%,
+        rgba(202,255,24,.35),
+        transparent 60%
+      );
+
+      transform:translateX(-100%);
+      animation:logoSweep 4s infinite;
+    }
+
+    @keyframes logoSweep{
+      0%,60%{
+        transform:translateX(-120%);
+      }
+
+      100%{
+        transform:translateX(120%);
+      }
+    }
+
+    .brand-text strong{
+      display:block;
+
+      font-size:15px;
+      letter-spacing:.3px;
+    }
+
+    .brand-text span{
+      display:block;
+
+      margin-top:3px;
+
+      color:#73786c;
+
+      font-size:9px;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
+
+    nav{
+      display:flex;
+      gap:6px;
+    }
+
+    nav a{
+      padding:10px 14px;
+
+      color:#9ca18f;
+      text-decoration:none;
+
+      font-size:13px;
+      font-weight:700;
+
+      border-bottom:2px solid transparent;
+
+      transition:.25s ease;
+    }
+
+    nav a:hover,
+    nav a.active{
+      color:white;
+      border-bottom-color:var(--lime);
+    }
+
+    .hero{
+      max-width:1280px;
+      margin:auto;
+
+      padding:88px 6% 54px;
+
+      display:grid;
+      grid-template-columns:1.25fr .75fr;
+      gap:60px;
+
+      align-items:end;
+    }
+
+    .label{
+      color:var(--lime);
+
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+
+      margin-bottom:18px;
+    }
+
+    .hero h1{
+      font-size:clamp(50px,7vw,86px);
+      line-height:.92;
+      letter-spacing:-4px;
+
+      max-width:700px;
+
+      animation:fadeUp .8s ease both;
+    }
+
+    .outline{
+      display:block;
+
+      color:transparent;
+      -webkit-text-stroke:1px rgba(255,255,255,.42);
+    }
+
+    .hero p{
+      margin-top:28px;
+
+      max-width:620px;
+
+      color:#969b8e;
+
+      font-size:15px;
+      line-height:1.8;
+
+      animation:fadeUp .9s .1s ease both;
+    }
+
+    @keyframes fadeUp{
+      from{
+        opacity:0;
+        transform:translateY(25px);
+      }
+
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .status-box{
+      border:1px solid var(--line-soft);
+      background:rgba(16,18,14,.75);
+
+      padding:22px;
+
+      position:relative;
+
+      animation:fadeUp 1s .15s ease both;
+    }
+
+    .status-box::before{
+      content:"";
+      position:absolute;
+      top:-1px;
+      left:-1px;
+
+      width:52px;
+      height:2px;
+
+      background:var(--lime);
+    }
+
+    .status-title{
+      color:#777d70;
+
+      font-size:9px;
+      letter-spacing:2px;
+      text-transform:uppercase;
+
+      margin-bottom:18px;
+    }
+
+    .status-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+
+      padding:10px 0;
+
+      border-bottom:1px solid rgba(255,255,255,.04);
+
+      font-family:Consolas, monospace;
+      font-size:11px;
+    }
+
+    .status-row:last-child{
+      border-bottom:none;
+    }
+
+    .status-value{
+      color:var(--lime);
+    }
+
+    .pulse-dot{
+      display:inline-block;
+
+      width:6px;
+      height:6px;
+
+      margin-right:7px;
+
+      background:var(--lime);
+      border-radius:50%;
+
+      box-shadow:0 0 10px var(--lime);
+
+      animation:pulse 1.7s infinite;
+    }
+
+    @keyframes pulse{
+      50%{
+        opacity:.35;
+        transform:scale(.7);
+      }
+    }
+
+    main{
+      max-width:1280px;
+      margin:auto;
+
+      padding:15px 6% 100px;
+    }
+
+    .topline{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+
+      margin-bottom:18px;
+
+      color:#71766b;
+
+      font-family:Consolas, monospace;
+      font-size:10px;
+      letter-spacing:1px;
+      text-transform:uppercase;
+    }
+
+    .employees{
+      border-top:1px solid var(--line-soft);
+    }
+
+    .employee{
+      display:grid;
+      grid-template-columns:70px 1fr 1.5fr 150px;
+      gap:20px;
+
+      align-items:center;
+
+      min-height:150px;
+
+      padding:25px 18px;
+
+      border-bottom:1px solid var(--line-soft);
+
+      position:relative;
+      overflow:hidden;
+
+      transition:
+        background .3s ease,
+        padding-left .3s ease,
+        border-color .3s ease;
+    }
+
+    .employee::before{
+      content:"";
+      position:absolute;
+      inset:0;
+
+      background:
+        linear-gradient(
+          90deg,
+          rgba(202,255,24,.055),
+          transparent 38%
+        );
+
+      opacity:0;
+      transition:.3s ease;
+    }
+
+    .employee:hover{
+      background:#11130f;
+      border-bottom-color:rgba(202,255,24,.2);
+      padding-left:26px;
+    }
+
+    .employee:hover::before{
+      opacity:1;
+    }
+
+    .employee > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .index{
+      color:#4f544b;
+
+      font-family:Consolas, monospace;
+      font-size:11px;
+    }
+
+    .person h2{
+      font-size:24px;
+      margin-bottom:8px;
+    }
+
+    .role{
+      color:var(--lime);
+
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:1.5px;
+      text-transform:uppercase;
+    }
+
+    .description{
+      color:#858b7f;
+
+      font-size:13px;
+      line-height:1.7;
+
+      max-width:520px;
+    }
+
+    .record{
+      justify-self:end;
+
+      color:#777d70;
+
+      font-family:Consolas, monospace;
+      font-size:10px;
+
+      text-align:right;
+    }
+
+    .record strong{
+      display:block;
+
+      margin-top:7px;
+
+      color:#dadfd2;
+
+      font-size:11px;
+    }
+
+    .highlight{
+      border-left:2px solid var(--lime);
+    }
+
+    .highlight .record strong{
+      color:var(--lime);
+    }
+
+    .highlight::after{
+      content:"RESEARCH NODE";
+      position:absolute;
+
+      top:16px;
+      right:18px;
+
+      color:var(--lime);
+
+      font-family:Consolas, monospace;
+      font-size:8px;
+      letter-spacing:1.5px;
+    }
+
+    footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+
+      padding:28px 6%;
+
+      border-top:1px solid var(--line-soft);
+
+      color:#5f645b;
+      font-size:11px;
+    }
+
+    .footer-status{
+      font-family:Consolas, monospace;
+    }
+
+    @media(max-width:900px){
+      .hero{
+        grid-template-columns:1fr;
+      }
+
+      .employee{
+        grid-template-columns:45px 1fr;
+      }
+
+      .description,
+      .record{
+        grid-column:2;
+        justify-self:start;
+        text-align:left;
+      }
+    }
+
+    @media(max-width:650px){
+      header{
+        height:auto;
+        padding:15px 5%;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+      }
+
+      nav{
+        overflow-x:auto;
+        width:100%;
+      }
+
+      .hero{
+        padding-top:60px;
+      }
+
+      .hero h1{
+        font-size:52px;
+        letter-spacing:-2px;
+      }
+
+      footer{
+        flex-direction:column;
+        gap:10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+
+  <a href="/osint/" class="brand">
+
+    <div class="brand-mark">A</div>
+
+    <div class="brand-text">
+      <strong>Asteria Dynamics</strong>
+      <span>Internal Intelligence Network</span>
+    </div>
+
+  </a>
+
+  <nav>
+    <a href="/osint/">Home</a>
+    <a class="active" href="/osint/staff.html">Staff</a>
+    <a href="/osint/archive.html">News Archive</a>
+  </nav>
+
+</header>
+
+
+<section class="hero">
+
+  <div>
+
+    <div class="label">
+      ASTERIA // PERSONNEL INDEX
+    </div>
+
+    <h1>
+      People behind
+      <span class="outline">the systems.</span>
+    </h1>
+
+    <p>
+      Selected personnel from Asteria Dynamics research and infrastructure
+      teams. Publicly available operational records are indexed below.
+    </p>
+
+  </div>
+
+
+  <div class="status-box">
+
+    <div class="status-title">
+      Directory Status
+    </div>
+
+    <div class="status-row">
+      <span>INDEX</span>
+      <span class="status-value">ONLINE</span>
+    </div>
+
+    <div class="status-row">
+      <span>RECORDS</span>
+      <span>04</span>
+    </div>
+
+    <div class="status-row">
+      <span>DIVISION</span>
+      <span>RESEARCH</span>
+    </div>
+
+    <div class="status-row">
+      <span>
+        <span class="pulse-dot"></span>
+        NETWORK
+      </span>
+      <span class="status-value">LIVE</span>
+    </div>
+
+  </div>
+
+</section>
+
+
+<main>
+
+  <div class="topline">
+    <span>PERSONNEL / SELECTED RECORDS</span>
+    <span>ASTERIA INTERNAL DIRECTORY</span>
+  </div>
+
+
+  <section class="employees">
+
+    <article class="employee">
+
+      <div class="index">01</div>
+
+      <div class="person">
+        <h2>Dr. Elena Voss</h2>
+        <div class="role">Director of Advanced Research</div>
+      </div>
+
+      <p class="description">
+        Leads internal research initiatives and coordinates restricted
+        development projects.
+      </p>
+
+      <div class="record">
+        RECORD ID
+        <strong>AST-RES-001</strong>
+      </div>
+
+    </article>
+
+
+    <article class="employee highlight">
+
+      <div class="index">02</div>
+
+      <div class="person">
+        <h2>Marcus Hale</h2>
+        <div class="role">Senior Infrastructure Engineer</div>
+      </div>
+
+      <p class="description">
+        Responsible for secure internal services, testing platforms,
+        and research support systems.
+      </p>
+
+      <div class="record">
+        INTERNAL ALIAS
+        <strong>mhale</strong>
+      </div>
+
+    </article>
+
+
+    <article class="employee">
+
+      <div class="index">03</div>
+
+      <div class="person">
+        <h2>Nadia Kerr</h2>
+        <div class="role">Security Analyst</div>
+      </div>
+
+      <p class="description">
+        Supports incident review, log analysis, and secure system validation.
+      </p>
+
+      <div class="record">
+        RECORD ID
+        <strong>AST-SEC-014</strong>
+      </div>
+
+    </article>
+
+
+    <article class="employee">
+
+      <div class="index">04</div>
+
+      <div class="person">
+        <h2>Owen Price</h2>
+        <div class="role">Systems Administrator</div>
+      </div>
+
+      <p class="description">
+        Maintains development servers, backup systems, and internal network
+        services.
+      </p>
+
+      <div class="record">
+        RECORD ID
+        <strong>AST-SYS-009</strong>
+      </div>
+
+    </article>
+
+  </section>
+
+</main>
+
+
+<footer>
+
+  <div>
+    &copy; 2026 Asteria Dynamics — Training Environment
+  </div>
+
+  <div class="footer-status">
+    <span class="pulse-dot"></span>
+    NODE STATUS // ONLINE
+  </div>
+
+</footer>
+
+</body>
+</html>

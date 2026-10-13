@@ -1,0 +1,118 @@
+services:
+  db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -uroot -p$${MARIADB_ROOT_PASSWORD} --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 20s
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  ctfd:
+    image: ctfd/ctfd:latest
+    restart: unless-stopped
+    environment:
+      SECRET_KEY: ${CTFD_SECRET_KEY}
+      DATABASE_URL: mysql+pymysql://${MARIADB_USER}:${MARIADB_PASSWORD}@db/${MARIADB_DATABASE}
+      REDIS_URL: redis://redis:6379
+      UPLOAD_FOLDER: /var/uploads
+      LOG_FOLDER: /var/log/CTFd
+      ACCESS_LOG: '-'
+      ERROR_LOG: '-'
+      REVERSE_PROXY: 'true'
+    volumes:
+      - ctfd-uploads:/var/uploads
+      - ctfd-logs:/var/log/CTFd
+    networks:
+      - control
+      - backend
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./platform/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./stages/stage01_osint/site:/srv/shadowvault/osint:ro
+      - ./evidence:/srv/shadowvault/evidence:ro
+      - ./platform/ctfd-theme:/srv/shadowvault/ctfd-theme:ro
+    networks:
+      - control
+    depends_on:
+      - ctfd
+
+  vaultdesk:
+    build:
+      context: ./stages/stage05_vaultdesk
+    restart: unless-stopped
+    networks:
+      - control
+      - challenge
+
+  shadow-root:
+    build:
+      context: ./stages/stage06_linux
+    container_name: shadow-root
+    restart: unless-stopped
+    environment:
+      SHADOWVAULT_FINAL_FLAG: SHADOW{root_of_the_shadow}
+    networks:
+      - challenge
+
+  ssh-gateway:
+    image: alpine/socat
+    container_name: shadowvault-ssh-gateway
+    restart: unless-stopped
+    command: TCP-LISTEN:22,fork,reuseaddr TCP:shadow-root:22
+    ports:
+      - "2222:22"
+    networks:
+      - control
+      - challenge
+    depends_on:
+      - shadow-root
+
+volumes:
+  db-data:
+  ctfd-uploads:
+  ctfd-logs:
+
+networks:
+  control:
+    driver: bridge
+
+  backend:
+    driver: bridge
+    internal: true
+
+  challenge:
+    driver: bridge
+    internal: true

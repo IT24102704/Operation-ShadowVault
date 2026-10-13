@@ -1,0 +1,18 @@
+.env
+*.log
+__pycache__/
+.pytest_cache/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+secrets/
+backups/
+
+# Environment secrets
+.env.*
+!.env.example
+
+# Python and local files
+venv/
+.venv/

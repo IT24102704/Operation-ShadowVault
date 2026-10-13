@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asteria Dynamics | News Archive</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --bg:#0b0c09;
+      --panel:#11130f;
+      --lime:#caff18;
+      --lime-soft:#e2ff7c;
+      --text:#f4f5ef;
+      --muted:#8d9284;
+      --line:rgba(255,255,255,.07);
+      --lime-line:rgba(202,255,24,.18);
+    }
+
+    body{
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 75% 10%, rgba(202,255,24,.045), transparent 24%),
+        #0b0c09;
+      color:var(--text);
+      font-family:Arial,Helvetica,sans-serif;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(202,255,24,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(202,255,24,.025) 1px, transparent 1px);
+      background-size:48px 48px;
+      opacity:.18;
+      z-index:-2;
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      top:-220px;
+      left:0;
+      right:0;
+      height:180px;
+      background:linear-gradient(
+        transparent,
+        rgba(202,255,24,.025),
+        transparent
+      );
+      pointer-events:none;
+      animation:scan 8s linear infinite;
+      z-index:-1;
+    }
+
+    @keyframes scan{
+      to{
+        transform:translateY(120vh);
+      }
+    }
+
+    header{
+      height:78px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 6%;
+      border-bottom:1px solid var(--line);
+      background:rgba(9,10,8,.92);
+      backdrop-filter:blur(14px);
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      text-decoration:none;
+      color:white;
+    }
+
+    .brand-mark{
+      width:38px;
+      height:38px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--lime);
+      color:var(--lime);
+      font-weight:900;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .brand-mark::after{
+      content:"";
+      position:absolute;
+      inset:-50%;
+      background:linear-gradient(
+        120deg,
+        transparent 40%,
+        rgba(202,255,24,.35),
+        transparent 60%
+      );
+      transform:translateX(-120%);
+      animation:sweep 4s infinite;
+    }
+
+    @keyframes sweep{
+      0%,60%{transform:translateX(-120%);}
+      100%{transform:translateX(120%);}
+    }
+
+    .brand-text strong{
+      display:block;
+      font-size:15px;
+    }
+
+    .brand-text span{
+      display:block;
+      margin-top:3px;
+      color:#73786c;
+      font-size:9px;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
+
+    nav{
+      display:flex;
+      gap:6px;
+    }
+
+    nav a{
+      padding:10px 14px;
+      color:#9ca18f;
+      text-decoration:none;
+      font-size:13px;
+      font-weight:700;
+      border-bottom:2px solid transparent;
+      transition:.25s ease;
+    }
+
+    nav a:hover,
+    nav a.active{
+      color:white;
+      border-bottom-color:var(--lime);
+    }
+
+    .hero{
+      max-width:1280px;
+      margin:auto;
+      padding:90px 6% 55px;
+      display:grid;
+      grid-template-columns:1.3fr .7fr;
+      gap:60px;
+      align-items:end;
+    }
+
+    .label{
+      color:var(--lime);
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      margin-bottom:18px;
+    }
+
+    .hero h1{
+      font-size:clamp(52px,7vw,88px);
+      line-height:.92;
+      letter-spacing:-4px;
+      animation:fadeUp .8s ease both;
+    }
+
+    .outline{
+      display:block;
+      color:transparent;
+      -webkit-text-stroke:1px rgba(255,255,255,.42);
+    }
+
+    .hero p{
+      margin-top:28px;
+      color:#93998b;
+      line-height:1.8;
+      max-width:650px;
+      font-size:15px;
+      animation:fadeUp .9s .1s ease both;
+    }
+
+    @keyframes fadeUp{
+      from{
+        opacity:0;
+        transform:translateY(25px);
+      }
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .archive-status{
+      border:1px solid var(--line);
+      padding:22px;
+      background:rgba(16,18,14,.75);
+      position:relative;
+      animation:fadeUp 1s .15s ease both;
+    }
+
+    .archive-status::before{
+      content:"";
+      position:absolute;
+      top:-1px;
+      left:-1px;
+      width:55px;
+      height:2px;
+      background:var(--lime);
+    }
+
+    .status-title{
+      color:#777d70;
+      font-size:9px;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      margin-bottom:18px;
+    }
+
+    .status-row{
+      display:flex;
+      justify-content:space-between;
+      padding:10px 0;
+      border-bottom:1px solid rgba(255,255,255,.04);
+      font-family:Consolas,monospace;
+      font-size:11px;
+    }
+
+    .status-row:last-child{
+      border-bottom:none;
+    }
+
+    .green{
+      color:var(--lime);
+    }
+
+    .pulse{
+      display:inline-block;
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background:var(--lime);
+      box-shadow:0 0 10px var(--lime);
+      margin-right:7px;
+      animation:pulse 1.7s infinite;
+    }
+
+    @keyframes pulse{
+      50%{
+        opacity:.35;
+        transform:scale(.7);
+      }
+    }
+
+    main{
+      max-width:1280px;
+      margin:auto;
+      padding:15px 6% 100px;
+    }
+
+    .topline{
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:18px;
+      color:#71766b;
+      font-family:Consolas,monospace;
+      font-size:10px;
+      letter-spacing:1px;
+      text-transform:uppercase;
+    }
+
+    .articles{
+      border-top:1px solid var(--line);
+    }
+
+    .article{
+      display:grid;
+      grid-template-columns:80px 1fr 180px;
+      gap:24px;
+      min-height:190px;
+      padding:30px 18px;
+      border-bottom:1px solid var(--line);
+      position:relative;
+      overflow:hidden;
+      transition:.3s ease;
+    }
+
+    .article::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(
+        90deg,
+        rgba(202,255,24,.05),
+        transparent 40%
+      );
+      opacity:0;
+      transition:.3s ease;
+    }
+
+    .article:hover{
+      background:#11130f;
+      padding-left:26px;
+      border-bottom-color:var(--lime-line);
+    }
+
+    .article:hover::before{
+      opacity:1;
+    }
+
+    .article > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .index{
+      color:#4f544b;
+      font-family:Consolas,monospace;
+      font-size:11px;
+    }
+
+    .content h2{
+      font-size:25px;
+      margin-bottom:9px;
+    }
+
+    .date{
+      color:var(--lime);
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:1.6px;
+      text-transform:uppercase;
+      margin-bottom:18px;
+    }
+
+    .content p{
+      color:#858b7f;
+      line-height:1.75;
+      font-size:13px;
+      max-width:760px;
+    }
+
+    .record{
+      justify-self:end;
+      text-align:right;
+      font-family:Consolas,monospace;
+      color:#777d70;
+      font-size:10px;
+    }
+
+    .record strong{
+      display:block;
+      color:#d9ded1;
+      margin-top:7px;
+      font-size:11px;
+    }
+
+    .featured{
+      border-left:2px solid var(--lime);
+      background:rgba(202,255,24,.012);
+    }
+
+    .featured::after{
+      content:"RESTRICTED RESEARCH";
+      position:absolute;
+      top:16px;
+      right:18px;
+      color:var(--lime);
+      font-family:Consolas,monospace;
+      font-size:8px;
+      letter-spacing:1.5px;
+    }
+
+    .evidence{
+      margin-top:20px;
+      padding:16px 18px;
+      border:1px solid var(--lime-line);
+      background:#0d100a;
+      font-family:Consolas,monospace;
+      font-size:11px;
+      line-height:1.9;
+      color:#8f9688;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .evidence::before{
+      content:"ARCHIVE REFERENCE";
+      display:block;
+      color:var(--lime);
+      font-size:9px;
+      font-weight:900;
+      letter-spacing:1.7px;
+      margin-bottom:8px;
+    }
+
+    .evidence code{
+      color:var(--lime-soft);
+    }
+
+    footer{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:28px 6%;
+      border-top:1px solid var(--line);
+      color:#5f645b;
+      font-size:11px;
+    }
+
+    .footer-status{
+      font-family:Consolas,monospace;
+    }
+
+    @media(max-width:900px){
+      .hero{
+        grid-template-columns:1fr;
+      }
+
+      .article{
+        grid-template-columns:50px 1fr;
+      }
+
+      .record{
+        grid-column:2;
+        justify-self:start;
+        text-align:left;
+      }
+    }
+
+    @media(max-width:650px){
+      header{
+        height:auto;
+        padding:15px 5%;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+      }
+
+      nav{
+        width:100%;
+        overflow-x:auto;
+      }
+
+      .hero{
+        padding-top:60px;
+      }
+
+      .hero h1{
+        font-size:52px;
+        letter-spacing:-2px;
+      }
+
+      footer{
+        flex-direction:column;
+        gap:10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="/osint/" class="brand">
+    <div class="brand-mark">A</div>
+
+    <div class="brand-text">
+      <strong>Asteria Dynamics</strong>
+      <span>Internal Intelligence Network</span>
+    </div>
+  </a>
+
+  <nav>
+    <a href="/osint/">Home</a>
+    <a href="/osint/staff.html">Staff</a>
+    <a class="active" href="/osint/archive.html">News Archive</a>
+  </nav>
+</header>
+
+
+<section class="hero">
+
+  <div>
+    <div class="label">ASTERIA // HISTORICAL INTELLIGENCE</div>
+
+    <h1>
+      Records never
+      <span class="outline">really disappear.</span>
+    </h1>
+
+    <p>
+      Historical public announcements from Asteria Dynamics.
+      Archived records may contain legacy project references,
+      operational details, and infrastructure information.
+    </p>
+  </div>
+
+
+  <div class="archive-status">
+
+    <div class="status-title">Archive Node</div>
+
+    <div class="status-row">
+      <span>STATUS</span>
+      <span class="green">ONLINE</span>
+    </div>
+
+    <div class="status-row">
+      <span>RECORDS</span>
+      <span>03</span>
+    </div>
+
+    <div class="status-row">
+      <span>YEAR INDEX</span>
+      <span>2025</span>
+    </div>
+
+    <div class="status-row">
+      <span>
+        <span class="pulse"></span>
+        ARCHIVE
+      </span>
+      <span class="green">LIVE</span>
+    </div>
+
+  </div>
+
+</section>
+
+
+<main>
+
+  <div class="topline">
+    <span>ARCHIVE / PUBLIC RECORDS</span>
+    <span>ASTERIA RESEARCH NETWORK</span>
+  </div>
+
+
+  <section class="articles">
+
+    <article class="article">
+
+      <div class="index">01</div>
+
+      <div class="content">
+        <h2>Research Infrastructure Upgrade Completed</h2>
+
+        <div class="date">March 18, 2025</div>
+
+        <p>
+          Asteria Dynamics completed a major upgrade to its internal research
+          infrastructure. The project was coordinated by the Advanced Research
+          division with support from the infrastructure engineering team.
+        </p>
+      </div>
+
+      <div class="record">
+        CLASSIFICATION
+        <strong>PUBLIC</strong>
+      </div>
+
+    </article>
+
+
+    <article class="article featured">
+
+      <div class="index">02</div>
+
+      <div class="content">
+
+        <h2>New Internal Research Initiative Announced</h2>
+
+        <div class="date">June 02, 2025</div>
+
+        <p>
+          A new restricted research initiative has entered its internal testing phase.
+          Staff documentation refers to the initiative using the codename
+          <strong style="color:#f4f5ef;">ShadowVault</strong>.
+        </p>
+
+        <p style="margin-top:14px;">
+          Infrastructure support for the project was assigned to engineer
+          <strong style="color:#f4f5ef;">Marcus Hale</strong>.
+        </p>
+
+        <div class="evidence">
+          Project owner alias:
+          <code>mhale</code><br>
+
+          Evidence package:
+          <code>office_photo.png</code>
+        </div>
+
+      </div>
+
+      <div class="record">
+        CLASSIFICATION
+        <strong class="green">RESEARCH</strong>
+      </div>
+
+    </article>
+
+
+    <article class="article">
+
+      <div class="index">03</div>
+
+      <div class="content">
+        <h2>Security Review Scheduled</h2>
+
+        <div class="date">August 11, 2025</div>
+
+        <p>
+          A routine internal security review was scheduled for several
+          development environments associated with confidential research systems.
+        </p>
+      </div>
+
+      <div class="record">
+        CLASSIFICATION
+        <strong>PUBLIC</strong>
+      </div>
+
+    </article>
+
+  </section>
+
+</main>
+
+
+<footer>
+
+  <div>
+    &copy; 2026 Asteria Dynamics — Training Environment
+  </div>
+
+  <div class="footer-status">
+    <span class="pulse"></span>
+    ARCHIVE NODE // ONLINE
+  </div>
+
+</footer>
+
+</body>
+</html>

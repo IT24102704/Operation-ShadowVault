@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Asteria Dynamics | Engineering Tomorrow</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    :root{
+      --bg:#0b0c09;
+      --panel:#11130f;
+      --panel2:#151811;
+      --lime:#caff18;
+      --lime-soft:#e2ff7c;
+      --text:#f4f5ef;
+      --muted:#8d9284;
+      --line:rgba(255,255,255,.07);
+      --lime-line:rgba(202,255,24,.18);
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      min-height:100vh;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 78% 18%, rgba(202,255,24,.055), transparent 24%),
+        radial-gradient(circle at 15% 80%, rgba(202,255,24,.025), transparent 25%),
+        var(--bg);
+      font-family:Arial,Helvetica,sans-serif;
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:-3;
+      background-image:
+        linear-gradient(rgba(202,255,24,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(202,255,24,.025) 1px, transparent 1px);
+      background-size:48px 48px;
+      opacity:.22;
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      left:0;
+      right:0;
+      top:-200px;
+      height:180px;
+      pointer-events:none;
+      z-index:-2;
+      background:linear-gradient(
+        transparent,
+        rgba(202,255,24,.03),
+        transparent
+      );
+      animation:scan 8s linear infinite;
+    }
+
+    @keyframes scan{
+      to{
+        transform:translateY(120vh);
+      }
+    }
+
+    header{
+      height:78px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 6%;
+      position:sticky;
+      top:0;
+      z-index:100;
+
+      border-bottom:1px solid var(--line);
+      background:rgba(9,10,8,.92);
+      backdrop-filter:blur(14px);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      text-decoration:none;
+      color:white;
+    }
+
+    .brand-mark{
+      width:38px;
+      height:38px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--lime);
+      color:var(--lime);
+      font-size:15px;
+      font-weight:900;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .brand-mark::after{
+      content:"";
+      position:absolute;
+      inset:-50%;
+      background:linear-gradient(
+        120deg,
+        transparent 40%,
+        rgba(202,255,24,.35),
+        transparent 60%
+      );
+      transform:translateX(-120%);
+      animation:sweep 4s infinite;
+    }
+
+    @keyframes sweep{
+      0%,60%{
+        transform:translateX(-120%);
+      }
+      100%{
+        transform:translateX(120%);
+      }
+    }
+
+    .brand-text strong{
+      display:block;
+      font-size:15px;
+      letter-spacing:.3px;
+    }
+
+    .brand-text span{
+      display:block;
+      margin-top:3px;
+      color:#73786c;
+      font-size:9px;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
+
+    nav{
+      display:flex;
+      gap:6px;
+    }
+
+    nav a{
+      padding:10px 14px;
+      color:#9ca18f;
+      text-decoration:none;
+      font-size:13px;
+      font-weight:700;
+      border-bottom:2px solid transparent;
+      transition:.25s ease;
+    }
+
+    nav a:hover,
+    nav a.active{
+      color:white;
+      border-bottom-color:var(--lime);
+    }
+
+    .hero{
+      min-height:680px;
+      max-width:1280px;
+      margin:auto;
+      padding:95px 6% 70px;
+
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:70px;
+      align-items:center;
+    }
+
+    .hero-copy{
+      animation:fadeUp .8s ease both;
+    }
+
+    .label{
+      display:inline-flex;
+      align-items:center;
+      gap:9px;
+
+      color:var(--lime);
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      margin-bottom:22px;
+    }
+
+    .pulse{
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background:var(--lime);
+      box-shadow:0 0 10px var(--lime);
+      animation:pulse 1.7s infinite;
+    }
+
+    @keyframes pulse{
+      50%{
+        opacity:.35;
+        transform:scale(.7);
+      }
+    }
+
+    .hero h1{
+      max-width:760px;
+      font-size:clamp(60px,8vw,104px);
+      line-height:.88;
+      letter-spacing:-5px;
+    }
+
+    .outline{
+      display:block;
+      color:transparent;
+      -webkit-text-stroke:1px rgba(255,255,255,.42);
+    }
+
+    .hero p{
+      max-width:650px;
+      margin-top:30px;
+      color:#929789;
+      line-height:1.8;
+      font-size:16px;
+    }
+
+    .hero-actions{
+      margin-top:34px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px 19px;
+      text-decoration:none;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.6px;
+      text-transform:uppercase;
+      transition:.25s ease;
+    }
+
+    .btn-primary{
+      background:var(--lime);
+      color:#10120c;
+      border:1px solid var(--lime);
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-3px);
+      box-shadow:0 0 28px rgba(202,255,24,.18);
+    }
+
+    .btn-secondary{
+      color:white;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+    }
+
+    .btn-secondary:hover{
+      border-color:var(--lime-line);
+      color:var(--lime);
+      transform:translateY(-3px);
+    }
+
+    @keyframes fadeUp{
+      from{
+        opacity:0;
+        transform:translateY(26px);
+      }
+
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    .visual{
+      position:relative;
+      min-height:470px;
+      animation:fadeUp 1s .12s ease both;
+    }
+
+    .radar{
+      position:absolute;
+      inset:20px;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at center, rgba(202,255,24,.03), transparent 60%);
+      overflow:hidden;
+    }
+
+    .radar::before,
+    .radar::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      border:1px solid rgba(202,255,24,.1);
+      border-radius:50%;
+    }
+
+    .radar::before{
+      width:230px;
+      height:230px;
+    }
+
+    .radar::after{
+      width:370px;
+      height:370px;
+    }
+
+    .cross-x,
+    .cross-y{
+      position:absolute;
+      background:rgba(202,255,24,.08);
+    }
+
+    .cross-x{
+      left:0;
+      right:0;
+      top:50%;
+      height:1px;
+    }
+
+    .cross-y{
+      top:0;
+      bottom:0;
+      left:50%;
+      width:1px;
+    }
+
+    .sweep{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:180px;
+      height:2px;
+      transform-origin:left center;
+      background:linear-gradient(90deg, var(--lime), transparent);
+      animation:rotate 6s linear infinite;
+    }
+
+    @keyframes rotate{
+      to{
+        transform:rotate(360deg);
+      }
+    }
+
+    .node{
+      position:absolute;
+      width:10px;
+      height:10px;
+      border:1px solid var(--lime);
+      background:#10120d;
+      box-shadow:0 0 15px rgba(202,255,24,.15);
+      animation:nodePulse 2.4s infinite;
+    }
+
+    .node::after{
+      content:"";
+      position:absolute;
+      inset:2px;
+      background:var(--lime);
+    }
+
+    @keyframes nodePulse{
+      50%{
+        box-shadow:0 0 25px rgba(202,255,24,.35);
+      }
+    }
+
+    .n1{left:24%;top:28%;}
+    .n2{right:21%;top:24%;animation-delay:.5s;}
+    .n3{left:38%;bottom:19%;animation-delay:1s;}
+    .n4{right:28%;bottom:29%;animation-delay:1.4s;}
+
+    .visual-label{
+      position:absolute;
+      font-family:Consolas,monospace;
+      font-size:9px;
+      letter-spacing:1px;
+      color:#72776a;
+    }
+
+    .vl1{left:8%;top:6%;}
+    .vl2{right:7%;bottom:6%;}
+
+    .terminal{
+      position:absolute;
+      left:-25px;
+      bottom:20px;
+      width:270px;
+      padding:18px;
+      background:rgba(11,13,9,.94);
+      border:1px solid var(--line);
+      font-family:Consolas,monospace;
+      font-size:10px;
+      line-height:1.9;
+      box-shadow:0 20px 60px rgba(0,0,0,.3);
+      animation:float 5s ease-in-out infinite;
+    }
+
+    @keyframes float{
+      50%{
+        transform:translateY(-8px);
+      }
+    }
+
+    .terminal .green{
+      color:var(--lime);
+    }
+
+    .terminal .dim{
+      color:#5f6458;
+    }
+
+    main{
+      max-width:1280px;
+      margin:auto;
+      padding:30px 6% 100px;
+    }
+
+    .section-top{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:30px;
+      margin-bottom:25px;
+    }
+
+    .section-top .mini{
+      color:var(--lime);
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+
+    .section-top h2{
+      font-size:36px;
+      letter-spacing:-1.5px;
+    }
+
+    .section-top p{
+      color:#777d70;
+      font-size:12px;
+      max-width:340px;
+      text-align:right;
+      line-height:1.6;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      border-top:1px solid var(--line);
+      border-left:1px solid var(--line);
+    }
+
+    .card{
+      min-height:280px;
+      padding:28px;
+      border-right:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      background:rgba(16,18,14,.52);
+      position:relative;
+      overflow:hidden;
+      transition:.3s ease;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(
+        140deg,
+        rgba(202,255,24,.06),
+        transparent 45%
+      );
+      opacity:0;
+      transition:.3s ease;
+    }
+
+    .card:hover{
+      background:#11130f;
+      transform:translateY(-5px);
+      border-color:var(--lime-line);
+    }
+
+    .card:hover::before{
+      opacity:1;
+    }
+
+    .card > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .card-index{
+      color:#565b51;
+      font-family:Consolas,monospace;
+      font-size:10px;
+      margin-bottom:55px;
+    }
+
+    .card h3{
+      font-size:22px;
+      margin-bottom:14px;
+    }
+
+    .card p{
+      color:#858b7f;
+      font-size:13px;
+      line-height:1.75;
+    }
+
+    .card .small{
+      display:block;
+      margin-top:16px;
+      color:#5e6459;
+      font-family:Consolas,monospace;
+      font-size:10px;
+    }
+
+    .card-link{
+      display:inline-block;
+      margin-top:20px;
+      text-decoration:none;
+      color:var(--lime);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.6px;
+      text-transform:uppercase;
+    }
+
+    .stats{
+      margin-top:28px;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      border:1px solid var(--line);
+    }
+
+    .stat{
+      padding:24px 18px;
+      text-align:center;
+      border-right:1px solid var(--line);
+      background:rgba(255,255,255,.015);
+    }
+
+    .stat:last-child{
+      border-right:none;
+    }
+
+    .stat strong{
+      display:block;
+      font-size:20px;
+      color:#f0f3e9;
+    }
+
+    .stat span{
+      display:block;
+      margin-top:7px;
+      color:#64695f;
+      font-size:9px;
+      letter-spacing:1.5px;
+      text-transform:uppercase;
+    }
+
+    footer{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:28px 6%;
+      color:#5f645b;
+      font-size:11px;
+      border-top:1px solid var(--line);
+    }
+
+    .footer-status{
+      font-family:Consolas,monospace;
+    }
+
+    @media(max-width:1000px){
+      .hero{
+        grid-template-columns:1fr;
+      }
+
+      .visual{
+        min-height:400px;
+      }
+
+      .cards{
+        grid-template-columns:1fr;
+      }
+
+      .stats{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+
+    @media(max-width:650px){
+      header{
+        height:auto;
+        padding:15px 5%;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+      }
+
+      nav{
+        width:100%;
+        overflow-x:auto;
+      }
+
+      .hero{
+        padding-top:60px;
+        min-height:auto;
+      }
+
+      .hero h1{
+        font-size:58px;
+        letter-spacing:-3px;
+      }
+
+      .visual{
+        min-height:330px;
+      }
+
+      .terminal{
+        left:10px;
+        width:240px;
+      }
+
+      .section-top{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .section-top p{
+        text-align:left;
+      }
+
+      .stats{
+        grid-template-columns:1fr 1fr;
+      }
+
+      footer{
+        flex-direction:column;
+        gap:10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+
+  <a href="/osint/" class="brand">
+    <div class="brand-mark">A</div>
+
+    <div class="brand-text">
+      <strong>Asteria Dynamics</strong>
+      <span>Internal Intelligence Network</span>
+    </div>
+  </a>
+
+  <nav>
+    <a class="active" href="/osint/">Home</a>
+    <a href="/osint/staff.html">Staff</a>
+    <a href="/osint/archive.html">News Archive</a>
+  </nav>
+
+</header>
+
+
+<section class="hero">
+
+  <div class="hero-copy">
+
+    <div class="label">
+      <span class="pulse"></span>
+      ASTERIA // SECURE SYSTEMS
+    </div>
+
+    <h1>
+      Engineering
+      <span class="outline">tomorrow.</span>
+    </h1>
+
+    <p>
+      Secure infrastructure, intelligent systems and advanced research
+      engineered for the next generation of digital operations.
+    </p>
+
+    <div class="hero-actions">
+
+      <a href="/osint/archive.html" class="btn btn-primary">
+        Explore Research
+      </a>
+
+      <a href="/osint/staff.html" class="btn btn-secondary">
+        Personnel Index
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <div class="visual">
+
+    <div class="radar">
+
+      <div class="cross-x"></div>
+      <div class="cross-y"></div>
+
+      <div class="sweep"></div>
+
+      <div class="node n1"></div>
+      <div class="node n2"></div>
+      <div class="node n3"></div>
+      <div class="node n4"></div>
+
+      <div class="visual-label vl1">
+        ASTERIA NETWORK // ACTIVE
+      </div>
+
+      <div class="visual-label vl2">
+        NODE MAP // 04 ONLINE
+      </div>
+
+    </div>
+
+
+    <div class="terminal">
+
+      <div><span class="dim">$</span> system-check</div>
+
+      <div>
+        NETWORK ........
+        <span class="green">ONLINE</span>
+      </div>
+
+      <div>
+        RESEARCH .......
+        <span class="green">ACTIVE</span>
+      </div>
+
+      <div>
+        SECURITY .......
+        <span class="green">NOMINAL</span>
+      </div>
+
+      <div class="dim">
+        secure operations // 2026
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<main>
+
+  <div class="section-top">
+
+    <div>
+      <div class="mini">ASTERIA / CAPABILITIES</div>
+      <h2>Built for secure innovation.</h2>
+    </div>
+
+    <p>
+      Research, infrastructure and intelligence systems designed
+      for controlled high-security environments.
+    </p>
+
+  </div>
+
+
+  <section class="cards">
+
+    <article class="card">
+
+      <div class="card-index">01 / COMPANY</div>
+
+      <h3>About Asteria Dynamics</h3>
+
+      <p>
+        Asteria Dynamics is a fictional technology company focused on secure
+        infrastructure, data systems and internal research projects.
+      </p>
+
+      <span class="small">
+        TECHNOLOGY // INFRASTRUCTURE // SECURITY
+      </span>
+
+    </article>
+
+
+    <article class="card">
+
+      <div class="card-index">02 / RESEARCH</div>
+
+      <h3>Research Division</h3>
+
+      <p>
+        Our research teams work on confidential internal initiatives and
+        next-generation security platforms.
+      </p>
+
+      <span class="small">
+        INTERNAL NAMING CONVENTION INTRODUCED DURING THE 2025 RESEARCH CYCLE.
+      </span>
+
+    </article>
+
+
+    <article class="card">
+
+      <div class="card-index">03 / INTELLIGENCE</div>
+
+      <h3>Latest News</h3>
+
+      <p>
+        Asteria Dynamics has completed another internal research milestone.
+        Historical company announcements remain available through our archive.
+      </p>
+
+      <a href="/osint/archive.html" class="card-link">
+        View Archive →
+      </a>
+
+    </article>
+
+  </section>
+
+
+  <section class="stats">
+
+    <div class="stat">
+      <strong>24 / 7</strong>
+      <span>Operations</span>
+    </div>
+
+    <div class="stat">
+      <strong>2025</strong>
+      <span>Research Cycle</span>
+    </div>
+
+    <div class="stat">
+      <strong>03</strong>
+      <span>Core Divisions</span>
+    </div>
+
+    <div class="stat">
+      <strong>ONLINE</strong>
+      <span>Network Status</span>
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer>
+
+  <div>
+    &copy; 2026 Asteria Dynamics — Training Environment
+  </div>
+
+  <div class="footer-status">
+    <span class="pulse"></span>
+    SYSTEM STATUS // NOMINAL
+  </div>
+
+</footer>
+
+</body>
+</html>

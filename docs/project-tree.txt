@@ -1,0 +1,20 @@
+shadowvault_project/
+|-- docker-compose.yml
+|-- .env.example
+|-- README.md
+|-- platform/
+|   |-- nginx/
+|   |   `-- nginx.conf
+|   `-- ctfd-theme/
+|       `-- shadowvault.css
+|-- stages/
+|   |-- stage01_osint/
+|   |   `-- site/
+|   |-- stage02_steg/
+|   |-- stage03_crypto/
+|   |-- stage04_forensics/
+|   |-- stage05_vaultdesk/
+|   `-- stage06_linux/
+|-- evidence/
+|-- scripts/
+`-- docs/
